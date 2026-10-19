@@ -30,11 +30,13 @@ In [`questions.json`](questions.json):
 
 ## results
 
-Pending. The eval did not run before the deadline because both of my OpenRouter keys were dead (expired, and an account that no longer exists). The chunker ran offline: 148 chunks from 15 pages, with nothing from Week 4. Details and the empty result tables are in [`CHECKS.md`](CHECKS.md).
+5 of 5 pass with retrieval and 0 of 5 without (`minimax/minimax-m3`, `openai/text-embedding-3-small`, 148 chunks). Without excerpts the model mostly says it has no access to the course, and on the lab step it guesses variable names that don't exist. The difference is the whole point: the facts only live in the pages, so the model gets them right only when retrieval puts them in the prompt. Full table in [`CHECKS.md`](CHECKS.md).
+
+These results were committed after the `week04-submitted` tag, because my OpenRouter keys were dead at the deadline.
 
 ## stale page
 
-`weeks/01/setup.md` says the fallback is `xiaomi/mimo-v2.5`. `weeks/03/lab.md` uses `xiaomi/mimo-v2.6-flash`. What the program answers is pending the eval run. The fix I'd try: tag each chunk with its file's last commit date and tell the model to trust the newest excerpt when two disagree.
+`weeks/01/setup.md` names `xiaomi/mimo-v2.5` as the fallback and `weeks/03/lab.md` uses `xiaomi/mimo-v2.6-flash`. The program retrieved both chunks (scores 0.423 and 0.385) and reported both models without saying which one is current. The fix I'd try: tag each chunk with its file's last commit date and tell the model to trust the newest excerpt when two disagree.
 
 ## one line I can explain
 
