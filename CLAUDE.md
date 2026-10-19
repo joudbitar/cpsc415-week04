@@ -4,14 +4,13 @@
      Graded: does it reflect how the team actually works? -->
 
 ## What this repository is
-One paragraph. Link to the current `spec.md`.
+A command-line RAG bot that answers questions about CPSC 415 from the course pages in `../ai-integration-course`. See [`spec.md`](spec.md).
 
 ## Commands
 ```
-# build
-# test
-# run
-# lint
+python3 index.py                 # build index.json
+python3 ask.py "<question>"     # ask
+python3 eval.py [--no-retrieval] # five-question eval
 ```
 
 ## Conventions

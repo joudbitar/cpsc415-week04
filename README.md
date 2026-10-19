@@ -1,45 +1,47 @@
-# Artifact-chain template
+# cpsc415-week04: ask the course
 
-Starting point for major project submissions in CPSC 415 (AI Integration, Trinity College). Click **Use this template** on GitHub to create your own repository from it. Do not fork.
+Answers questions about CPSC 415 from the course's own Markdown pages, prints the chunks it retrieved with their scores, cites the pages it used, and replies "I can't find that in the course documents." when the pages don't say.
 
-The course follows Anthropic's [AI-Native SDLC Playbook](https://claude.com/blog/the-ai-native-sdlc-playbook): every stage of the work leaves a short, version-controlled artifact. The agent writes most of the code. You decide what gets built, steer, verify, and explain every choice. These files are how you prove you understood what the agent built.
+The artifact chain is in [`intent/ask-the-course.md`](intent/ask-the-course.md), [`spec.md`](spec.md) and [`plan.md`](plan.md). The plan was approved and committed before the first code commit.
 
-## Early labs
+## run it
 
-Week 1 uses the minimal repository described in the course handout. Later introductory labs complete only the stages assigned so far. This template describes the full chain for team projects and the final portfolio; it does not require unintroduced artifacts in Week 1. Project languages are chosen and justified, with one separate guided exercise in an unfamiliar language.
+Python 3.9 or later, standard library only. Clone the course repo next to this one as `../ai-integration-course`.
 
-## The chain
-
-| Stage | File | Written by | Approved by |
-|---|---|---|---|
-| Plan | `intent/<name>.md` | The agent, after interviewing you | You |
-| Design | `spec.md` | The agent, from the approved intent | You, against the intent |
-| Build | `plan.md`, then code on a branch | The agent | You, before any code |
-| Test | tests, lint, CI | The agent | You confirm the loop actually ran |
-| Deploy | a pull request reviewed against `REVIEW.md` | A separate reviewing agent | You merge |
-| Maintain | a new `intent/<name>.md` | Triggered by a bug, a ticket, or a model change | You triage |
-
-`CLAUDE.md` and `REVIEW.md` travel with the repo and are graded artifacts.
-
-## Rules that are graded
-
-- Intent and spec exist before code. Plan is approved before implementation. The commit history shows it.
-- One pull request per feature, from a branch, reviewed before merge. Do not commit to `main` directly after the first commit.
-- `spec.md` states the **language** and the **model** for each component and why.
-- `ANNOTATION.md` answers the four questions for the finished project.
-- No secrets in the repo. `.claude/settings.local.json` and `.env` are ignored; the `.example` file shows the shape.
-
-## Submitting
-
-Tag the commit you are submitting and put the repository URL plus the tag on Moodle:
-
-```
-git tag tp1-submitted
-git push origin tp1-submitted
+```bash
+export OPENROUTER_API_KEY=...        # or put OPENROUTER_API_KEY=... in .env (gitignored)
+python3 index.py                     # builds index.json from the course pages
+python3 ask.py "When is Team Project 1 due?"
+python3 eval.py                      # five questions with retrieval
+python3 eval.py --no-retrieval       # same questions, no excerpts
 ```
 
-Tags the course uses: `intent-spec`, `tp1-submitted`, `tp2-submitted`, `portfolio-final`.
+Optional: `CHAT_MODEL` (default `minimax/minimax-m3`), `EMBED_MODEL` (default `openai/text-embedding-3-small`). `index.json` is gitignored. Rebuild it with `python3 index.py`.
 
-## Running the agent
+## the five questions
 
-Copy `.claude/settings.local.json.example` to `.claude/settings.local.json` and fill in your OpenRouter key and model slugs, or use the `orclaude` launcher from the [course repository](https://github.com/kousen/ai-integration-course/tree/main/scripts).
+In [`questions.json`](questions.json):
+
+1. When is Team Project 1 due? Checks a date that sits in one place.
+2. What percentage of the grade is the Individual Portfolio? Checks a number from the grading table.
+3. In the Week 3 lab, which variable do you change to run a second model? Checks a step inside one lab handout.
+4. When is Team Project 1 due, and how many late days does each student get? The answer needs two pages, the project sheet and the syllabus.
+5. Where should CPSC 415 students park? The pages don't say, so the right answer is the refusal. This catches a model that makes things up.
+
+## results
+
+Pending. The eval did not run before the deadline because both of my OpenRouter keys were dead (expired, and an account that no longer exists). The chunker ran offline: 148 chunks from 15 pages, with nothing from Week 4. Details and the empty result tables are in [`CHECKS.md`](CHECKS.md).
+
+## stale page
+
+`weeks/01/setup.md` says the fallback is `xiaomi/mimo-v2.5`. `weeks/03/lab.md` uses `xiaomi/mimo-v2.6-flash`. What the program answers is pending the eval run. The fix I'd try: tag each chunk with its file's last commit date and tell the model to trust the newest excerpt when two disagree.
+
+## one line I can explain
+
+`rag.py:106`
+
+```python
+scored = [(cosine(question_vec, c["vector"]), c) for c in index]
+```
+
+This is where chunks get ranked. Every chunk's vector is compared with the question's vector by cosine similarity, the cosine of the angle between them. 1.0 means they point the same way (same meaning), and near 0 means unrelated. The next line sorts by that score and keeps the top 5. Those 5 are the only text the model sees.

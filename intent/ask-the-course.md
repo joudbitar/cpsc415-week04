@@ -7,7 +7,7 @@ A command-line program that answers a question about CPSC 415 using only the cou
 A student in the course. Today they search the syllabus, assignment sheets and lab handouts by hand, or ask a chat model that has never seen the pages and makes up dates.
 
 ## Constraints
-- Documents: `../ai-integration-course` — `syllabus.md`, `assignments/`, `weeks/01` to `weeks/03`. Skip `weeks/04` and later. Read from the clone, never copy pages into this repo.
+- Documents: `../ai-integration-course`: `syllabus.md`, `assignments/`, `weeks/01` to `weeks/03`. Skip `weeks/04` and later. Read from the clone, never copy pages into this repo.
 - Models through OpenRouter, key in `OPENROUTER_API_KEY`. No key in the repo.
 - Every answer prints the retrieved chunks and their scores.
 - Cost: under one cent per question.
