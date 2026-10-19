@@ -1,0 +1,12 @@
+[
+  {"id": "due-date", "catches": "a date in one place (assignment sheet and syllabus agree)",
+   "question": "When is Team Project 1 due?", "expect": ["November 2"]},
+  {"id": "grade-weight", "catches": "a number from the grading table",
+   "question": "What percentage of the course grade is the Individual Portfolio?", "expect": ["25"]},
+  {"id": "lab-step", "catches": "a step inside one lab handout",
+   "question": "In the Week 3 lab, which environment variable do you change to run the eval on a second model?", "expect": ["CHAT_MODEL"]},
+  {"id": "spread", "catches": "an answer that needs two pages: the project sheet and the syllabus late-day policy",
+   "question": "When is Team Project 1 due, and how many late days does each student have for the semester?", "expect": ["November 2", "3"]},
+  {"id": "unanswerable", "catches": "the model inventing an answer instead of refusing",
+   "question": "Where should CPSC 415 students park on campus?", "expect": ["can't find that in the course documents"]}
+]

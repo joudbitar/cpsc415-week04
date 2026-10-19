@@ -22,3 +22,4 @@ venv/
 .gradle/
 bin/
 obj/
+index.json
